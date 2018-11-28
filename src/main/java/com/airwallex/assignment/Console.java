@@ -12,8 +12,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.math.BigDecimal;
 import java.util.*;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.toList;
 
@@ -40,6 +38,7 @@ public class Console implements Caretaker {
         builder.buildArithmetic();
 
         calculator.setCaretaker(console);
+
         // register command clear, undo
         calculator.registerCommand("clear", () -> { calculator.clear(); console.momentos.clear(); });
         calculator.registerCommand("undo", () -> {
@@ -80,7 +79,6 @@ public class Console implements Caretaker {
 
                 System.out.printf("stack: %s\n", String.join(" ", results));
 
-
                 Optional.ofNullable(unhanledList)
                         .ifPresent( list -> {
                             System.out.println("(the " + String.join(",", list)
@@ -101,6 +99,13 @@ public class Console implements Caretaker {
         return true;
     }
 
+    /**
+     * @Author: lx
+     * @Date: 2018-11-28
+     * @Description: 把BigDecimal 按设定的精度转换成String
+     * @Param: num 要转换的把BigDecimal  precision 精度
+     * @return: String
+     */
     public static String formatBigDecimal(BigDecimal num, int precision) {
         return Optional.ofNullable(num)
             .map(val-> {
@@ -109,7 +114,7 @@ public class Console implements Caretaker {
                 String[] strs = numStr.split("\\.");
 
                 if (strs.length > 1) {
-                    strs[1] = strs[1].substring(0, Integer.min(DISPLAY_PRECISION, strs[1].length()));
+                    strs[1] = strs[1].substring(0, Integer.min(precision, strs[1].length()));
                 }
                 return String.join(".", strs);
 

@@ -10,6 +10,6 @@ import java.util.stream.Stream;
 
 public interface Calculator<T extends Number> {
     void clear();
-    void eval(String expression) throws EvalException;
+    boolean eval(String expression) throws EvalException;
     Stream<T> getResult();
 }

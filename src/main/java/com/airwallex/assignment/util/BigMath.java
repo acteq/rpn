@@ -9,7 +9,7 @@ import java.math.RoundingMode;
  * @date 2018-11-23
  */
 
-public class BigBigMath {
+public class BigMath {
 
     private static final BigDecimal TWO = BigDecimal.valueOf(2);
 

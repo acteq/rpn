@@ -8,9 +8,11 @@ import java.util.stream.Stream;
 /**
  * @author lx
  * @date 2018-11-24
+ * @Description 使用堆栈实现的计算器基类，负责操作数保存，算术运算，创建备忘录，恢复
+ * 具体的表达式解析和附加命令由子类实现，支持波兰表达式，逆波兰表达式
  */
 
-public abstract class StackCalculator<T extends Number> implements Calculator<T> {
+public class StackCalculator<T extends Number> implements Calculator<T> {
 
     private final Stack<T> linked = new Stack<>();
     private Caretaker caretaker = null;
@@ -29,7 +31,13 @@ public abstract class StackCalculator<T extends Number> implements Calculator<T>
         return linked.stream();
     }
 
-
+    /**
+    * @Author: lx
+    * @Date: 2018-11-28
+    * @Description: 单元运算符入栈，计算，创建和保存备忘录
+    * @Param: * @param null
+    * @return:
+    */
     protected void pushOperator(UnaryOperator<T> operator) {
         Optional.ofNullable(operator)
                 .ifPresent(op-> {
@@ -58,6 +66,13 @@ public abstract class StackCalculator<T extends Number> implements Calculator<T>
 
     }
 
+    /**
+     * @Author: lx
+     * @Date: 2018-11-28
+     * @Description: 二元运算符入栈，计算，创建和保存备忘录
+     * @Param: * @param null
+     * @return:
+     */
     protected void pushOperator(BinaryOperator<T> operator) {
         Optional.ofNullable(operator)
                 .ifPresent(op->{
@@ -95,7 +110,13 @@ public abstract class StackCalculator<T extends Number> implements Calculator<T>
 
     }
 
-
+    /**
+     * @Author: lx
+     * @Date: 2018-11-28
+     * @Description: 运算符，创建和保存备忘录
+     * @Param: * @param null
+     * @return:
+     */
     protected void pushOperand(T number) {
         Optional.ofNullable(number)
                 .ifPresent(num -> {
@@ -110,7 +131,13 @@ public abstract class StackCalculator<T extends Number> implements Calculator<T>
                 });
     }
 
-
+    /**
+     * @Author: lx
+     * @Date: 2018-11-28
+     * @Description: 备忘录恢复
+     * @Param: * @param null
+     * @return:
+     */
     public void setMemento(Momento momento) {
         Optional.ofNullable(momento)
                 .map(m -> (T[]) m.getState())
@@ -127,6 +154,17 @@ public abstract class StackCalculator<T extends Number> implements Calculator<T>
                     }
                 });
 
+    }
+
+    /**
+     * @Author: lx
+     * @Date: 2018-11-28
+     * @Description: 具体的表达式解析由子类实现，支持波兰表达式，逆波兰表达式
+     * @Param: * @param null
+     * @return: false
+     */
+    public boolean eval(String text) throws EvalException {
+        return false;
     }
 
 }

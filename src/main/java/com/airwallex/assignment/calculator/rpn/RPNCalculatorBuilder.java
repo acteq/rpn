@@ -1,7 +1,7 @@
 package com.airwallex.assignment.calculator.rpn;
 
 import com.airwallex.assignment.calculator.CalculatorBuilder;
-import com.airwallex.assignment.util.BigBigMath;
+import com.airwallex.assignment.util.BigMath;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -9,6 +9,8 @@ import java.math.RoundingMode;
 /**
  * @author lx
  * @date 2018-11-25
+ * @Description: 逆波兰计算器创建器，构建的计算器支持算术运算，精度定义
+ * undo, clear命令不在这里注册，可由RPNCalculator的使用者自行添加。
  */
 
 public class RPNCalculatorBuilder implements CalculatorBuilder<BigDecimal> {
@@ -24,6 +26,13 @@ public class RPNCalculatorBuilder implements CalculatorBuilder<BigDecimal> {
         return calculator;
     }
 
+    /**
+    * @Author: lx
+    * @Date: 2018-11-28
+    * @Description: 构建计算器的算术运算符，目前支持加减乘除和开方
+     * 不属于算术操作符的命令，如clear, undo 等，由另外的类通过 RPNCalculator 的registerCommand完成。
+    * @return:  void
+    */
     @Override
     public void buildArithmetic() {
 
@@ -34,7 +43,7 @@ public class RPNCalculatorBuilder implements CalculatorBuilder<BigDecimal> {
 
         //we have catched runtime exceptions in the method eval of  Calculator class
         calculator.registerOperator("/", (num1, num2) -> num1.divide(num2, Integer.max(precision, Integer.max(num1.scale(), num2.scale())), RoundingMode.HALF_UP));
-        calculator.registerOperator("sqrt", (num) -> BigBigMath.sqrt(num, Integer.max(num.scale(), precision)));
+        calculator.registerOperator("sqrt", (num) -> BigMath.sqrt(num, Integer.max(num.scale(), precision)));
     }
 
 }

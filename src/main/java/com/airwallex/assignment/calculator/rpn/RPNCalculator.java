@@ -15,6 +15,7 @@ import java.util.regex.Pattern;
 /**
  * @author lx acte@foxmail.com
  * @date 2018-11-22
+ * @Description 逆波兰计算器，继承自StackCalculator，负责命令和算术运算符注册，表达式解析
  */
 
 public class RPNCalculator<T extends Number> extends StackCalculator<T>  {
@@ -31,11 +32,12 @@ public class RPNCalculator<T extends Number> extends StackCalculator<T>  {
     }
 
     @Override
-    public void eval(String text) throws EvalException {
+    public boolean eval(String text) throws EvalException {
 
         Pattern pattern = Pattern.compile("\\S+");
         Matcher m = pattern.matcher(text);
 
+        // lambda表达式作用：当要解析text发现错误时，提取剩余未解析部分
         BiFunction<String, Exception, EvalException> createEvalException = (msg, e) -> {
             EvalException ex = new EvalException(msg, e);
 
@@ -55,6 +57,7 @@ public class RPNCalculator<T extends Number> extends StackCalculator<T>  {
 
             String node = m.group();
             try {
+                // 依次检验是否 命令，单元运算符，二元运算符，操作数，做相应动作
                 Boolean isOperator = Optional.ofNullable(commandMap.get(node))
                         .map(command -> {
                             command.run();
@@ -99,6 +102,8 @@ public class RPNCalculator<T extends Number> extends StackCalculator<T>  {
                 throw createEvalException.apply(msg, e);
             }
         }
+
+        return true;
 
     }
 
