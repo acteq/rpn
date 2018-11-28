@@ -1,10 +1,9 @@
 package com.airwallex.assignment.util;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.math.MathContext;
 import java.math.RoundingMode;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * @author lx
@@ -68,36 +67,37 @@ public class BigDecimalSqrt {
         return deviation.setScale(scale, BigDecimal.ROUND_HALF_UP);
     }
 
-    public static boolean isNumeric2(String str) {
-        Pattern pattern = Pattern.compile("-?[0-9]+\\.?[0-9]*");
-        Matcher isNum = pattern.matcher(str);
-        if (!isNum.matches()) {
-            return false;
-        }
-        return true;
+    private static final BigDecimal TWO = BigDecimal.valueOf(2);
+
+    /** Estimate square root of val, used as start value for babylonian method*/
+    private static BigInteger estimateSqrt(BigInteger val) {
+        return val.shiftRight(val.bitLength() / 2);
+    }
+
+    /** Estimate square root of val, used as start value for babylonian method*/
+    private static BigDecimal estimateSqrt(BigDecimal val) {
+        return new BigDecimal(estimateSqrt(val.unscaledValue()), val.scale()/2);
     }
 
     /**
-     * 匹配是否包含数字
-     * @param str 可能为中文，也可能是-19162431.1254，不使用BigDecimal的话，变成-1.91624311254E7
-     * @return
-     * @author
-     * @date
+     * Babylonian square root method (Newton's method) to compute the square
+     * root of the given big decimal number up to roughly the given scale.
+     *
+     * @param  scale scale of the <tt>BigDecimal</tt> square root to be returned
+     * @return <tt>sqrt(num)</tt>
      */
-    public static boolean isNumeric(String str) {
-        // 该正则表达式可以匹配所有的数字 包括负数
-        Pattern pattern = Pattern.compile("-?[0-9]+\\.?[0-9]*");
-        String bigStr;
-        try {
-            bigStr = new BigDecimal(str).toString();
-        } catch (Exception e) {
-            return false;//异常 说明包含非数字。
+    public static BigDecimal sqrt(final BigDecimal num, final int scale) {
+        BigDecimal x0 = BigDecimal.ZERO;
+        BigDecimal x1 = estimateSqrt(num);
+
+        while (!x0.equals(x1)) {
+            x0 = x1;
+            x1 = num.divide(x0, scale, RoundingMode.HALF_EVEN);
+            x1 = x1.add(x0);
+            x1 = x1.divide(TWO, scale, RoundingMode.HALF_EVEN);
         }
 
-        Matcher isNum = pattern.matcher(bigStr); // matcher是全匹配
-        if (!isNum.matches()) {
-            return false;
-        }
-        return true;
+        return x1;
     }
+
 }
