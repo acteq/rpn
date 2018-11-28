@@ -20,7 +20,7 @@ public class TestBigMath {
 
     @Test
     public void testSqrtWithInt() {
-        int origin = rand.nextInt();
+        int origin = rand.nextInt(200);
 
         BigDecimal originBig = new BigDecimal(origin);
 
@@ -33,7 +33,7 @@ public class TestBigMath {
 
     @Test
     public void testSqrtWithLong() {
-        long origin = rand.nextLong();
+        long origin = rand.nextInt(200);
 
         BigDecimal originBig = new BigDecimal(origin);
 
@@ -46,7 +46,7 @@ public class TestBigMath {
 
     @Test
     public void testSqrtWithFloat() {
-        float origin = rand.nextFloat();
+        float origin = rand.nextInt(200);
 
         BigDecimal orginBig = new BigDecimal(origin*origin);
         BigDecimal val = BigMath.sqrt(orginBig, 15);
@@ -58,7 +58,7 @@ public class TestBigMath {
 
     @Test
     public void testSqrtWithDouble() {
-        double origin = rand.nextDouble();
+        double origin = rand.nextInt(200);
 
         BigDecimal orginBig = new BigDecimal(origin*origin);
         BigDecimal val = BigMath.sqrt(orginBig, 15);
