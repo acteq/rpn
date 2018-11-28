@@ -17,6 +17,7 @@ import java.util.Stack;
  * @date 2018-11-28
  */
 
+
 public class TestRPNCalculator {
 
     private RPNCalculator calculator;
@@ -33,6 +34,7 @@ public class TestRPNCalculator {
     }
 
     @Before
+    @SuppressWarnings("unchecked")
     public void setup() {
         AnCareTaker anCareTaker = new AnCareTaker();
 
@@ -58,6 +60,7 @@ public class TestRPNCalculator {
     }
 
     @Test
+    @SuppressWarnings("unchecked")
     public void testEvalPushOperand()throws EvalException{
         calculator.clear();
         calculator.eval("5");
@@ -67,6 +70,7 @@ public class TestRPNCalculator {
     }
 
     @Test
+    @SuppressWarnings("unchecked")
     public void testEvalSqrt() throws EvalException{
         calculator.clear();
         calculator.eval("4 sqrt");
@@ -87,6 +91,7 @@ public class TestRPNCalculator {
 
 
     @Test
+    @SuppressWarnings("unchecked")
     public void testEvalOperatorPlus() throws EvalException{
 
         calculator.clear();
@@ -98,6 +103,7 @@ public class TestRPNCalculator {
     }
 
     @Test
+    @SuppressWarnings("unchecked")
     public void testEvalOperatorSubtract() throws EvalException{
 
         calculator.clear();
@@ -110,6 +116,7 @@ public class TestRPNCalculator {
     }
 
     @Test
+    @SuppressWarnings("unchecked")
     public void testEvalOperatorMultiply() throws EvalException{
 
         calculator.clear();
@@ -121,6 +128,7 @@ public class TestRPNCalculator {
     }
 
     @Test
+    @SuppressWarnings("unchecked")
     public void testEvalOperatorDivide() throws EvalException {
 
         calculator.clear();
@@ -134,6 +142,7 @@ public class TestRPNCalculator {
 
     //example
     @Test
+    @SuppressWarnings("unchecked")
     public void testEvalDividByZero() {
 
         Object[] array = null;
@@ -151,6 +160,7 @@ public class TestRPNCalculator {
     }
     //example 1
     @Test
+    @SuppressWarnings("unchecked")
     public void testEvalExample1()  throws EvalException{
 
         Object[] array = null;
@@ -165,6 +175,7 @@ public class TestRPNCalculator {
 
     //example 2
     @Test
+    @SuppressWarnings("unchecked")
     public void testEvalExample2() throws EvalException{
 
         Object[] array = null;
@@ -185,6 +196,7 @@ public class TestRPNCalculator {
 
     //example 3
     @Test
+    @SuppressWarnings("unchecked")
     public void testEvalExample3() throws EvalException{
 
         Object[] array = null;
@@ -209,6 +221,7 @@ public class TestRPNCalculator {
 
     //example 4
     @Test
+    @SuppressWarnings("unchecked")
     public void testEvalExample4()  throws EvalException{
 
         Object[] array = null;
@@ -243,6 +256,7 @@ public class TestRPNCalculator {
 
     //example 5
     @Test
+    @SuppressWarnings("unchecked")
     public void testEvalExample5()  throws EvalException{
 
         Object[] array = null;
@@ -268,6 +282,7 @@ public class TestRPNCalculator {
 
     //example 6
     @Test
+    @SuppressWarnings("unchecked")
     public void testEvalExample6()  throws EvalException{
 
         Object[] array = null;
@@ -299,6 +314,7 @@ public class TestRPNCalculator {
 
     //example 7
     @Test
+    @SuppressWarnings("unchecked")
     public void testEvalExample7()  throws EvalException{
 
         Object[] array = null;
@@ -322,6 +338,7 @@ public class TestRPNCalculator {
 
     //example 8
     @Test
+    @SuppressWarnings("unchecked")
     public void testEvalExample8() {
 
         Object[] array = null;
