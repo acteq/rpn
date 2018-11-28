@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.airwallex.assignment.RPNArithmeticTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2018-11-28T03:23:24" hostname="lxdeiMac.local" time="0.001">
+  <properties/>
+  <testcase name="testIsNumeric" classname="com.airwallex.assignment.RPNArithmeticTest" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

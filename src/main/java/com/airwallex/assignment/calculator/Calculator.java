@@ -1,5 +1,6 @@
 package com.airwallex.assignment.calculator;
 
+
 import java.util.stream.Stream;
 
 /**
@@ -9,7 +10,6 @@ import java.util.stream.Stream;
 
 public interface Calculator<T extends Number> {
     void clear();
-    void undo();
     void eval(String expression) throws EvalException;
     Stream<T> getResult();
 }

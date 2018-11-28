@@ -6,4 +6,5 @@ package com.airwallex.assignment.calculator;
  */
 
 public interface Caretaker {
+    boolean add(Momento momento);
 }

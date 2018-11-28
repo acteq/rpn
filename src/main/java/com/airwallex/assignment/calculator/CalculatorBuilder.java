@@ -5,7 +5,7 @@ package com.airwallex.assignment.calculator;
  * @date 2018-11-25
  */
 
-public interface CalculatorBuilder {
-    Calculator buildCalculator(int setPrecision);
+public interface CalculatorBuilder<T extends Number> {
+    Calculator<T> buildCalculator(int setPrecision);
     void buildArithmetic();
 }
