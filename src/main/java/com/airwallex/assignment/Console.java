@@ -10,9 +10,11 @@ import com.airwallex.assignment.calculator.rpn.RPNCalculatorBuilder;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 import java.util.Stack;
+import java.util.stream.Collectors;
 
 
 /**
@@ -42,31 +44,42 @@ public class Console implements Caretaker {
         });
 
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        String str = br.readLine();
+        String str = null;
+        try{
+            str = br.readLine();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         List<String> unhanledList = null;
-        while(! str.isEmpty()){
+        while(str != null && ! str.isEmpty()){
             try {
                 calculator.eval(str);
             }catch (EvalException e){
                 System.out.println(e.getMessage());
                 unhanledList = e.getUnhanledList();
+
             }catch (Exception e){
                 System.out.println(e.getMessage());
             }finally {
                 System.out.print("stack:");
                 //displayed to 10 decimal places
-                calculator.getResult().forEach( val -> System.out.printf(" %.10f", val));
+//                List<String> results = calculator.getResult().map(val-> ((BigDecimal)val).toPlainString()).collect(Collectors.toList());
+                calculator.getResult().forEach( val -> System.out.printf(" %.10f", (BigDecimal)val));
                 System.out.print("\n");
 
                 Optional.ofNullable(unhanledList)
                         .ifPresent( list -> {
+
                             System.out.println("(the " + String.join(",", list)
                                     + " were not pushed on to the stack due to the previous error)");
                         });
             }
-
-            str = br.readLine();
+            try{
+                str = br.readLine();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 

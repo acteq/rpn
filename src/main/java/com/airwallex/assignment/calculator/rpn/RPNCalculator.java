@@ -41,7 +41,7 @@ public class RPNCalculator<T extends Number> extends StackCalculator<T>  {
             EvalException ex = new EvalException(msg, e);
 
             List<String> list = new ArrayList<>();
-            list.add(m.group());
+
             while (m.find()) {
                 list.add(m.group());
             }

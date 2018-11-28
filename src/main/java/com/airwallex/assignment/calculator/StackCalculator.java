@@ -33,18 +33,27 @@ public abstract class StackCalculator<T extends Number> implements Calculator<T>
     protected void pushOperator(UnaryOperator<T> operator) {
         Optional.ofNullable(operator)
                 .ifPresent(op-> {
+                    T restore1 = null;
                     //EmptyStackException
-                    T num1 = linked.pop();
-                    T num2 = op.apply(num1);
-                    Optional.ofNullable(caretaker)
-                            .ifPresent(taker -> {
-                                T[] state = (T[]) new Number[1];
-                                state[0] = num2;
+                    try {
+                        T num1 = restore1 = linked.pop();
+                        linked.push(op.apply(num1));
+                        Optional.ofNullable(caretaker)
+                                .ifPresent(taker -> {
+                                    T[] state = (T[]) new Number[1];
+                                    state[0] = num1;
 
-                                Momento momento = new Momento();
-                                momento.setState(state);
-                                caretaker.add(momento);
-                            });
+                                    Momento momento = new Momento();
+                                    momento.setState(state);
+                                    caretaker.add(momento);
+                                });
+                    }catch (EmptyStackException e){
+                        Optional.ofNullable(restore1).ifPresent(num->linked.push(num));
+                        throw e;
+                    }catch (Exception e) {
+                        Optional.ofNullable(restore1).ifPresent(num->linked.push(num));
+                        throw e;
+                    }
                 });
 
     }
@@ -52,22 +61,36 @@ public abstract class StackCalculator<T extends Number> implements Calculator<T>
     protected void pushOperator(BinaryOperator<T> operator) {
         Optional.ofNullable(operator)
                 .ifPresent(op->{
+                    T restore1 = null;
+                    T restore2 = null;
                     //EmptyStackException
-                    T num1 = linked.pop();
-                    T num2 = linked.pop();
-                    T result = op.apply(num1, num2);
-                    linked.push(result);
+                    try {
+                        T num = restore1 = linked.pop();
+                        T numPrev = restore2 = linked.pop();
 
-                    Optional.ofNullable(caretaker)
-                            .ifPresent( taker -> {
-                                T[] state = (T[]) new Number[2];
-                                state[0] = num2;
-                                state[1] = num1;
+                        T result = op.apply(numPrev, num);
+                        linked.push(result);
 
-                                Momento momento = new Momento();
-                                momento.setState(state);
-                                caretaker.add(momento);
-                            });
+                        Optional.ofNullable(caretaker)
+                                .ifPresent( taker -> {
+                                    T[] state = (T[]) new Number[2];
+                                    state[0] = numPrev;
+                                    state[1] = num;
+
+                                    Momento momento = new Momento();
+                                    momento.setState(state);
+                                    caretaker.add(momento);
+                                });
+
+                    }catch (EmptyStackException e){
+                        Optional.ofNullable(restore2).ifPresent(num->linked.push(num));
+                        Optional.ofNullable(restore1).ifPresent(num->linked.push(num));
+                        throw e;
+                    }catch (Exception e) {
+                        Optional.ofNullable(restore2).ifPresent(num->linked.push(num));
+                        Optional.ofNullable(restore1).ifPresent(num->linked.push(num));
+                        throw e;
+                    }
                 });
 
     }
