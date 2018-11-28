@@ -11,10 +11,11 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.math.BigDecimal;
-import java.util.List;
-import java.util.Optional;
-import java.util.Stack;
+import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import static java.util.stream.Collectors.toList;
 
 
 /**
@@ -26,21 +27,29 @@ public class Console implements Caretaker {
 
     Stack<Momento> momentos = new Stack();
 
+    private static final int STORED_PRECISION = 15;
+
+    private static final int DISPLAY_PRECISION = 10;
+
     public static void main(String args[]) throws IOException {
 
         Console console = new Console();
 
         RPNCalculatorBuilder builder = new RPNCalculatorBuilder();
-        RPNCalculator calculator = builder.buildCalculator(15);
+        RPNCalculator calculator = builder.buildCalculator(STORED_PRECISION);
         builder.buildArithmetic();
 
         calculator.setCaretaker(console);
         // register command clear, undo
-        calculator.registerCommand("clear", () -> calculator.clear());
+        calculator.registerCommand("clear", () -> { calculator.clear(); console.momentos.clear(); });
         calculator.registerCommand("undo", () -> {
             //EmptyStackException
-            Momento momento = console.momentos.pop();
-            calculator.setMemento(momento);
+            try {
+                Momento momento = console.momentos.pop();
+                calculator.setMemento(momento);
+            }catch (EmptyStackException e){
+                //nothing to do
+            }
         });
 
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -62,15 +71,18 @@ public class Console implements Caretaker {
             }catch (Exception e){
                 System.out.println(e.getMessage());
             }finally {
-                System.out.print("stack:");
+
                 //displayed to 10 decimal places
-//                List<String> results = calculator.getResult().map(val-> ((BigDecimal)val).toPlainString()).collect(Collectors.toList());
-                calculator.getResult().forEach( val -> System.out.printf(" %.10f", (BigDecimal)val));
-                System.out.print("\n");
+
+                List<String> results = (List<String>)calculator.getResult()
+                        .map( val -> formatBigDecimal((BigDecimal) val, DISPLAY_PRECISION))
+                        .collect(toList());
+
+                System.out.printf("stack: %s\n", String.join(" ", results));
+
 
                 Optional.ofNullable(unhanledList)
                         .ifPresent( list -> {
-
                             System.out.println("(the " + String.join(",", list)
                                     + " were not pushed on to the stack due to the previous error)");
                         });
@@ -87,5 +99,20 @@ public class Console implements Caretaker {
     public boolean add(Momento momento) {
         momentos.push(momento);
         return true;
+    }
+
+    public static String formatBigDecimal(BigDecimal num, int precision) {
+        return Optional.ofNullable(num)
+            .map(val-> {
+                String numStr = num.stripTrailingZeros().toPlainString();
+
+                String[] strs = numStr.split("\\.");
+
+                if (strs.length > 1) {
+                    strs[1] = strs[1].substring(0, Integer.min(DISPLAY_PRECISION, strs[1].length()));
+                }
+                return String.join(".", strs);
+
+            }).orElse(null);
     }
 }
