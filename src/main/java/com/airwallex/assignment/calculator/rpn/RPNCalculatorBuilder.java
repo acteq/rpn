@@ -7,10 +7,11 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 
 /**
+ * 逆波兰计算器创建器，构建的计算器支持算术运算，精度定义
+ * <br>undo, clear命令不在这里注册，可由RPNCalculator的使用者自行添加。
+ * date 2018-11-25
  * @author lx
- * @date 2018-11-25
- * @Description: 逆波兰计算器创建器，构建的计算器支持算术运算，精度定义
- * undo, clear命令不在这里注册，可由RPNCalculator的使用者自行添加。
+ * @version 0.0.1
  */
 
 public class RPNCalculatorBuilder implements CalculatorBuilder<BigDecimal> {
@@ -18,6 +19,13 @@ public class RPNCalculatorBuilder implements CalculatorBuilder<BigDecimal> {
     private RPNCalculator<BigDecimal> calculator;
     private int precision;
 
+    /**
+     * 构建计算器
+     * <br>date: 2018-11-28
+     * @author: lx
+     * @param setPrecision int
+     * @return:  RPNCalculator
+     */
     @Override
     public RPNCalculator buildCalculator(int setPrecision) {
         calculator = new RPNCalculator<>(text -> new BigDecimal(text));
@@ -27,12 +35,11 @@ public class RPNCalculatorBuilder implements CalculatorBuilder<BigDecimal> {
     }
 
     /**
-    * @Author: lx
-    * @Date: 2018-11-28
-    * @Description: 构建计算器的算术运算符，目前支持加减乘除和开方
-     * 不属于算术操作符的命令，如clear, undo 等，由另外的类通过 RPNCalculator 的registerCommand完成。
-    * @return:  void
-    */
+     * 构建计算器的算术运算符，目前支持加减乘除和开方
+     * <br>不属于算术操作符的命令，如clear, undo 等，由另外的类通过 RPNCalculator 的registerCommand完成。
+     * <br>date: 2018-11-28
+     * @author: lx
+     */
     @Override
     public void buildArithmetic() {
 

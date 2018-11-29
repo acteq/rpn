@@ -6,10 +6,11 @@ import java.util.function.*;
 import java.util.stream.Stream;
 
 /**
+ * 使用堆栈实现的计算器基类，负责操作数保存，算术运算，创建备忘录，恢复
+ * <br>具体的表达式解析和附加命令由子类实现，支持波兰表达式，逆波兰表达式
+ * <br>date 2018-11-24
  * @author lx
- * @date 2018-11-24
- * @Description 使用堆栈实现的计算器基类，负责操作数保存，算术运算，创建备忘录，恢复
- * 具体的表达式解析和附加命令由子类实现，支持波兰表达式，逆波兰表达式
+ * @version 0.0.1
  */
 
 public class StackCalculator<T extends Number> implements Calculator<T> {
@@ -32,12 +33,11 @@ public class StackCalculator<T extends Number> implements Calculator<T> {
     }
 
     /**
-    * @Author: lx
-    * @Date: 2018-11-28
-    * @Description: 单元运算符入栈，计算，创建和保存备忘录
-    * @Param: * @param null
-    * @return:
-    */
+     * 单元运算符入栈，计算，创建和保存备忘录
+     * <br>date: 2018-11-28
+     * @author: lx
+     * @param  operator the UnaryOperator
+     */
     protected void pushOperator(UnaryOperator<T> operator) {
         Optional.ofNullable(operator)
                 .ifPresent(op-> {
@@ -67,11 +67,10 @@ public class StackCalculator<T extends Number> implements Calculator<T> {
     }
 
     /**
-     * @Author: lx
-     * @Date: 2018-11-28
-     * @Description: 二元运算符入栈，计算，创建和保存备忘录
-     * @Param: * @param null
-     * @return:
+     * 二元运算符入栈，计算，创建和保存备忘录
+     * <br>date: 2018-11-28
+     * @author: lx
+     * @param  operator the BinaryOperator
      */
     protected void pushOperator(BinaryOperator<T> operator) {
         Optional.ofNullable(operator)
@@ -111,11 +110,10 @@ public class StackCalculator<T extends Number> implements Calculator<T> {
     }
 
     /**
-     * @Author: lx
-     * @Date: 2018-11-28
-     * @Description: 运算符，创建和保存备忘录
-     * @Param: * @param null
-     * @return:
+     * 运算符，创建和保存备忘录
+     * <br>2018-11-28
+     * @author lx
+     * @param number type T
      */
     protected void pushOperand(T number) {
         Optional.ofNullable(number)
@@ -132,11 +130,10 @@ public class StackCalculator<T extends Number> implements Calculator<T> {
     }
 
     /**
-     * @Author: lx
-     * @Date: 2018-11-28
-     * @Description: 备忘录恢复
-     * @Param: * @param null
-     * @return:
+     * 备忘录恢复
+     * <br>date: 2018-11-28
+     * @author lx
+     * @param momento Momento
      */
     public void setMemento(Momento momento) {
         Optional.ofNullable(momento)
@@ -157,11 +154,11 @@ public class StackCalculator<T extends Number> implements Calculator<T> {
     }
 
     /**
-     * @Author: lx
-     * @Date: 2018-11-28
-     * @Description: 具体的表达式解析由子类实现，支持波兰表达式，逆波兰表达式
-     * @Param: * @param null
-     * @return: false
+     * 具体的表达式解析由子类实现，支持波兰表达式，逆波兰表达式
+     * <br>2018-11-28
+     * @author lx
+     * @param text  String
+     * @return boolean always false
      */
     public boolean eval(String text) throws EvalException {
         return false;

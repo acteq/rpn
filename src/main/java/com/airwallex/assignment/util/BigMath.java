@@ -5,8 +5,9 @@ import java.math.BigInteger;
 import java.math.RoundingMode;
 
 /**
+ * BigDecimal sqrt
+ * date 2018-11-23
  * @author lx
- * @date 2018-11-23
  */
 
 public class BigMath {

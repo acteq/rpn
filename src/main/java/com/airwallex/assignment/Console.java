@@ -17,8 +17,10 @@ import static java.util.stream.Collectors.toList;
 
 
 /**
+ * 控制台应用程序
+ * date 2018-11-25
  * @author lx
- * @date 2018-11-25
+ * @version 0.0.1
  */
 
 public class Console implements Caretaker {
@@ -100,11 +102,12 @@ public class Console implements Caretaker {
     }
 
     /**
-     * @Author: lx
-     * @Date: 2018-11-28
-     * @Description: 把BigDecimal 按设定的精度转换成String
-     * @Param: num 要转换的把BigDecimal  precision 精度
-     * @return: String
+     * 把BigDecimal 按设定的精度转换成String
+     * <br>date 2018-11-28
+     * @author lx
+     * @param num 要转换的把BigDecimal
+     * @param precision 精度
+     * @return String
      */
     public static String formatBigDecimal(BigDecimal num, int precision) {
         return Optional.ofNullable(num)

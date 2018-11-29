@@ -13,9 +13,10 @@ import java.util.regex.Pattern;
 
 
 /**
+ * 逆波兰计算器，继承自StackCalculator，负责命令和算术运算符注册，表达式解析
+ * date 2018-11-22
  * @author lx acte@foxmail.com
- * @date 2018-11-22
- * @Description 逆波兰计算器，继承自StackCalculator，负责命令和算术运算符注册，表达式解析
+ * @version 0.0.1
  */
 
 public class RPNCalculator<T extends Number> extends StackCalculator<T>  {
@@ -31,6 +32,14 @@ public class RPNCalculator<T extends Number> extends StackCalculator<T>  {
         this.toNumber = toNumber;
     }
 
+    /**
+     * 计算表达式
+     * <br>date 2018-11-28
+     * @author lx
+     * @param  text String
+     * @return boolean
+     * @throws EvalException 表达式解析异常
+     */
     @Override
     public boolean eval(String text) throws EvalException {
 
@@ -108,14 +117,36 @@ public class RPNCalculator<T extends Number> extends StackCalculator<T>  {
     }
 
 
+    /**
+     * 注册命令和对应的函数接口
+     * <br>date 2018-11-28
+     * @author lx
+     * @param  key String, 如"undo", "clear"
+     * @param  command Runnable接口
+     */
     public void registerCommand(String key, Runnable command) {
         commandMap.put(key, command);
     }
 
+
+    /**
+     * 注册一元运算符和对应的函数接口
+     * <br>date 2018-11-28
+     * @author lx
+     * @param  key String 如 "sqrt"
+     * @param  operator UnaryOperator接口
+     */
     public void registerOperator(String key, UnaryOperator<T> operator) {
         unaryOperatorMap.put(key, operator);
     }
 
+    /**
+     * 注册二元运算符和对应的函数接口
+     * <br>date 2018-11-28
+     * @author lx
+     * @param  key String 如"+", "-", "/", "*"
+     * @param  operator BinaryOperator接口
+     */
     public void registerOperator(String key, BinaryOperator<T> operator) {
         binaryOperatorHashMap.put(key, operator);
     }
