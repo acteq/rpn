@@ -1,6 +1,19 @@
 ## compile and build 
 using gradle 4.5
 
+## how to build
+gradle build
+
+
+## how to run
+gradle run -q --console=plain
+or 
+java -cp build/libs/rpn-0.0.1-SNAPSHOT.jar com.airwallex.assignment.Console
+
+
+## genernate document
+gradle javadoc 
+
 ## how to test
 gradle test
 
@@ -68,11 +81,3 @@ stack: 120
 operator * (position: 15): insucient parameters stack: 11
 (the 6 and 5 were not pushed on to the stack due to the previous error)
 
-## how to build
-gradle build
-
-
-## how to run
-gradle run -q --console=plain
-or 
-java -cp build/libs/rpn-0.0.1-SNAPSHOT.jar com.airwallex.assignment.Console
