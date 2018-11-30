@@ -41,7 +41,7 @@ public class TestRPNCalculator {
 
     @BeforeEach
     @SuppressWarnings("unchecked")
-    public void setupClass() {
+    public void setup() {
         AnCareTaker anCareTaker = new AnCareTaker();
 
         calculator = new RPNCalculatorBuilder(STORED_PRECISION).buildArithmetic().build();
