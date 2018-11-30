@@ -33,9 +33,6 @@ public class StackCalculator<T extends Number> implements Calculator<T> {
     }
 
 
-    protected Stream<T> getData() {
-        return linked.stream();
-    }
     /**
      * 单元运算符入栈，计算，创建和保存备忘录
      * <br>date: 2018-11-28
