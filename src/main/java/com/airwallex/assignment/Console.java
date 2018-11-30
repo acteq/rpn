@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.math.BigDecimal;
 import java.util.*;
+import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.toList;
 
@@ -75,11 +76,10 @@ public class Console implements Caretaker {
 
                 //displayed to 10 decimal places
 
-                List<String> results = (List<String>)calculator.getResult()
-                        .map( val -> formatBigDecimal((BigDecimal) val, DISPLAY_PRECISION))
-                        .collect(toList());
+                Stream<String> results = calculator.stream()
+                        .map( val -> formatBigDecimal((BigDecimal) val, DISPLAY_PRECISION));
 
-                System.out.printf("stack: %s\n", String.join(" ", results));
+                System.out.printf("stack: %s\n", String.join(" ", results.collect(toList())));
 
                 Optional.ofNullable(unhanledList)
                         .ifPresent( list -> {

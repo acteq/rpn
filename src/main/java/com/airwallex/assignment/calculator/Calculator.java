@@ -1,6 +1,7 @@
 package com.airwallex.assignment.calculator;
 
 
+import java.util.List;
 import java.util.stream.Stream;
 
 /**
@@ -20,13 +21,13 @@ public interface Calculator<T extends Number> {
 
     /**
      * 计算表达式
-     * <br>date 2018-11-28
+     * <br>date 2018-11-30
      * @author lx
      * @param  text String
-     * @return boolean
+     * @return 计算结果的流
      * @throws EvalException 表达式解析异常
      */
-    boolean eval(String text) throws EvalException;
+     Stream<T> eval(String text) throws EvalException;
 
     /**
      * 返回计算器状态
@@ -34,5 +35,5 @@ public interface Calculator<T extends Number> {
      * @author lx
      * @return Stream
      */
-    Stream<T> getResult();
+    Stream<T> stream();
 }

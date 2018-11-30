@@ -22,7 +22,7 @@ public class TestStackCalculator {
         calculator.pushOperand(4.0);
         calculator.pushOperator(num -> Math.sqrt(num));
 
-        Object[] array = calculator.getResult().toArray();
+        Object[] array = calculator.stream().toArray();
         Assert.assertEquals(array.length, 1);
         Assert.assertTrue(Math.abs(((Double)array[0]) - 2.0) < 0.00001);
 
@@ -35,7 +35,7 @@ public class TestStackCalculator {
         calculator.pushOperand(1);
         calculator.pushOperator((num1, num2) -> num1 + num2);
 
-        Object[] array = calculator.getResult().toArray();
+        Object[] array = calculator.stream().toArray();
         Assert.assertEquals(array.length, 1);
         Assert.assertEquals( (Integer)array[0], new Integer(2));
 
@@ -46,7 +46,7 @@ public class TestStackCalculator {
         StackCalculator<Integer> calculator = new StackCalculator<>();
         calculator.pushOperand(1);
 
-        Object[] array = calculator.getResult().toArray();
+        Object[] array = calculator.stream().toArray();
         Assert.assertEquals(array.length, 1);
         Assert.assertEquals( (Integer)array[0], new Integer(1));
     }

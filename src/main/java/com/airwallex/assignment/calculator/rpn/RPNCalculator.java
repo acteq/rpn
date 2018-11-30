@@ -4,12 +4,10 @@ import com.airwallex.assignment.calculator.EvalException;
 import com.airwallex.assignment.calculator.StackCalculator;
 
 import java.util.*;
-import java.util.function.BiFunction;
-import java.util.function.BinaryOperator;
-import java.util.function.Function;
-import java.util.function.UnaryOperator;
+import java.util.function.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Stream;
 
 
 /**
@@ -37,11 +35,11 @@ public class RPNCalculator<T extends Number> extends StackCalculator<T>  {
      * <br>date 2018-11-28
      * @author lx
      * @param  text String
-     * @return boolean
+     * @return result stream
      * @throws EvalException 表达式解析异常
      */
     @Override
-    public boolean eval(String text) throws EvalException {
+    public Stream<T> eval(String text) throws EvalException {
 
         Pattern pattern = Pattern.compile("\\S+");
         Matcher m = pattern.matcher(text);
@@ -50,17 +48,15 @@ public class RPNCalculator<T extends Number> extends StackCalculator<T>  {
         BiFunction<String, Exception, EvalException> createEvalException = (msg, e) -> {
             EvalException ex = new EvalException(msg, e);
 
-            List<String> list = new ArrayList<>();
+            List<String> list = extractMatchNode(m);
 
-            while (m.find()) {
-                list.add(m.group());
-            }
             if(list.size() > 0) {
                 ex.setUnhanledList(list);
             }
 
             return ex;
         };
+
 
         while(m.find()) {
 
@@ -112,7 +108,8 @@ public class RPNCalculator<T extends Number> extends StackCalculator<T>  {
             }
         }
 
-        return true;
+
+        return stream();
 
     }
 
@@ -151,4 +148,23 @@ public class RPNCalculator<T extends Number> extends StackCalculator<T>  {
         binaryOperatorHashMap.put(key, operator);
     }
 
+
+    /**
+     * 提取模式匹配的节点
+     * <br>date 2018-11-30
+     * @author lx
+     * @param  m Matcher
+     * @return nodes
+     */
+    public List<String> extractMatchNode(Matcher m) {
+
+        List<String> list = new ArrayList<>();
+
+        while (m.find()) {
+            list.add(m.group());
+        }
+
+        return list;
+
+    }
 }
