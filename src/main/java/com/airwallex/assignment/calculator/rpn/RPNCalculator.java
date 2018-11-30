@@ -3,11 +3,14 @@ package com.airwallex.assignment.calculator.rpn;
 import com.airwallex.assignment.calculator.EvalException;
 import com.airwallex.assignment.calculator.StackCalculator;
 
+import java.math.BigDecimal;
 import java.util.*;
 import java.util.function.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
+
+import static java.util.stream.Collectors.toList;
 
 
 /**
@@ -24,6 +27,7 @@ public class RPNCalculator<T extends Number> extends StackCalculator<T>  {
     private Map<String, BinaryOperator<T> > binaryOperatorHashMap = new HashMap<>();
 
     private Function<String, T> toNumber;
+    private Function<T, String> toText = null;
 
     public RPNCalculator(Function<String, T> toNumber) {
         super();
@@ -165,6 +169,30 @@ public class RPNCalculator<T extends Number> extends StackCalculator<T>  {
         }
 
         return list;
+    }
 
+    /**
+     * 设定显示精度
+     * <br>date 2018-11-28
+     * @author lx
+     * @return Stack content
+     */
+    public void setDispalyFormat(Function<T, String> toText){
+        this.toText = toText;
+    }
+
+    /**
+     * 按设定的显示精度输出Stack
+     * <br>date 2018-11-28
+     * @author lx
+     * @return Stack content
+     */
+    @Override
+    public String toString() {
+        Function<T, String> func = toText;
+
+        Stream<String> results = stream()
+                .map( val -> func == null ? val.toString() : func.apply(val));
+        return "stack: " + String.join(" ", results.collect(toList()));
     }
 }

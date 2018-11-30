@@ -6,15 +6,11 @@ import com.airwallex.assignment.calculator.Momento;
 import com.airwallex.assignment.calculator.rpn.RPNCalculator;
 import com.airwallex.assignment.calculator.rpn.RPNCalculatorBuilder;
 
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.math.BigDecimal;
 import java.util.*;
-import java.util.stream.Stream;
 
-import static java.util.stream.Collectors.toList;
 
 
 /**
@@ -36,8 +32,10 @@ public class Console implements Caretaker {
 
         Console console = new Console();
 
-        RPNCalculator calculator = new RPNCalculatorBuilder(STORED_PRECISION)
-                .buildArithmetic().build();
+        RPNCalculator calculator = new RPNCalculatorBuilder()
+                .buildArithmetic(STORED_PRECISION)
+                .setDisplayPrecision(DISPLAY_PRECISION)
+                .build();
 
         calculator.setCaretaker(console);
 
@@ -73,12 +71,7 @@ public class Console implements Caretaker {
                 System.out.println(e.getMessage());
             }finally {
 
-                //displayed to 10 decimal places
-
-                Stream<String> results = calculator.stream()
-                        .map( val -> formatBigDecimal((BigDecimal) val, DISPLAY_PRECISION));
-
-                System.out.printf("stack: %s\n", String.join(" ", results.collect(toList())));
+                System.out.printf("%s\n", calculator.toString());
 
                 Optional.ofNullable(unhanledList)
                         .ifPresent( list -> {
@@ -100,26 +93,4 @@ public class Console implements Caretaker {
         return true;
     }
 
-    /**
-     * 把BigDecimal 按设定的精度转换成String
-     * <br>date 2018-11-28
-     * @author lx
-     * @param num 要转换的把BigDecimal
-     * @param precision 精度
-     * @return String
-     */
-    public static String formatBigDecimal(BigDecimal num, int precision) {
-        return Optional.ofNullable(num)
-            .map(val-> {
-                String numStr = num.stripTrailingZeros().toPlainString();
-
-                String[] strs = numStr.split("\\.");
-
-                if (strs.length > 1) {
-                    strs[1] = strs[1].substring(0, Integer.min(precision, strs[1].length()));
-                }
-                return String.join(".", strs);
-
-            }).orElse(null);
-    }
 }

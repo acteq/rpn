@@ -5,6 +5,7 @@ import java.util.*;
 import java.util.function.*;
 import java.util.stream.Stream;
 
+
 /**
  * 使用堆栈实现的计算器基类，负责操作数保存，算术运算，创建备忘录，恢复
  * <br>具体的表达式解析和附加命令由子类实现，支持波兰表达式，逆波兰表达式

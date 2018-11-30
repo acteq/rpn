@@ -29,6 +29,8 @@ public class TestRPNCalculator extends TestStackCalculator {
 
     private RPNCalculator calculator;
     private final int STORED_PRECISION = 15;
+    private final int DISPLAY_PRECISION = 10;
+
     private class AnCareTaker implements Caretaker{
 
         private Stack<Momento> momentos = new Stack<>();
@@ -40,18 +42,20 @@ public class TestRPNCalculator extends TestStackCalculator {
         }
     }
 
-    @BeforeEach
-    @SuppressWarnings("unchecked")
-    public void setup() {
+    public TestRPNCalculator(){
         AnCareTaker anCareTaker = new AnCareTaker();
 
-        calculator = new RPNCalculatorBuilder(STORED_PRECISION).buildArithmetic().build();
+        calculator = new RPNCalculatorBuilder()
+                .buildArithmetic(STORED_PRECISION)
+                .setDisplayPrecision(DISPLAY_PRECISION)
+                .build();
+
         calculator.setCaretaker(anCareTaker);
-        // register command clear, undo
         calculator.registerCommand("clear", () -> {
             calculator.clear();
             anCareTaker.momentos.clear();
         });
+
         calculator.registerCommand("undo", () -> {
             //EmptyStackException
             try {
@@ -63,11 +67,17 @@ public class TestRPNCalculator extends TestStackCalculator {
         });
     }
 
+
+    @BeforeEach
+    @SuppressWarnings("unchecked")
+    public void setup() {
+        calculator.clear();
+    }
+
     @Test
     @SuppressWarnings("unchecked")
     @DisplayName("test eval method using an operand")
     public void testEvalPushOperand()throws EvalException{
-
         Stream result = calculator.eval("5");
         result.forEach(val ->{
             assertEquals(((BigDecimal)val).intValue(), 5, "'5' should be :");
