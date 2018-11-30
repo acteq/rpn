@@ -1,13 +1,17 @@
 
-apply plugin: 'java'
-apply plugin: 'application'
+
+plugins {
+    id 'java'
+    id 'application'
+    id 'idea'
+}
+
+sourceCompatibility = '1.8'
+targetCompatibility = '1.8'
+group = 'com.airwallex'
+version = '0.0.1-SNAPSHOT'
 
 mainClassName = "com.airwallex.assignment.Console"
-
-group 'com.airwallex'
-version '0.0.1-SNAPSHOT'
-
-sourceCompatibility = 1.8
 
 repositories {
     mavenCentral()
@@ -18,13 +22,23 @@ task createJavadoc(type: Javadoc) {
 }
 
 dependencies {
-    testCompile group: 'junit', name: 'junit', version: '4.12'
+    testCompile('org.junit.jupiter:junit-jupiter-api:5.3.0')
+    testCompile('org.junit.jupiter:junit-jupiter-params:5.3.0')
+    testRuntime('org.junit.jupiter:junit-jupiter-engine:5.3.0')
 }
 
 run{
     standardInput = System.in
 }
 
+test {
+    useJUnitPlatform()
+    testLogging {
+        events "passed", "skipped", "failed"
+    }
+}
 
-
+wrapper {
+    gradleVersion = '5.0'
+}
 

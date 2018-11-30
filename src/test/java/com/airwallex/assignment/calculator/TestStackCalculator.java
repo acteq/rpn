@@ -1,21 +1,22 @@
 package com.airwallex.assignment.calculator;
 
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 
-
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * @author lx
  * @date 2018-11-28
  */
-
+@DisplayName("StackCalculator test case")
 public class TestStackCalculator {
 
 
-
     @Test
+    @DisplayName("test pushUnaryOperator method")
     public void testPushUnaryOperator() {
 
         StackCalculator<Double> calculator = new StackCalculator<>();
@@ -23,12 +24,13 @@ public class TestStackCalculator {
         calculator.pushOperator(num -> Math.sqrt(num));
 
         Object[] array = calculator.stream().toArray();
-        Assert.assertEquals(array.length, 1);
-        Assert.assertTrue(Math.abs(((Double)array[0]) - 2.0) < 0.00001);
+        assertEquals(array.length, 1);
+        assertTrue(Math.abs(((Double)array[0]) - 2.0) < 0.00001);
 
     }
 
     @Test
+    @DisplayName("test pushBinaryOperator method")
     public void testPushBinaryOperator() {
         StackCalculator<Integer> calculator = new StackCalculator<>();
         calculator.pushOperand(1);
@@ -36,19 +38,20 @@ public class TestStackCalculator {
         calculator.pushOperator((num1, num2) -> num1 + num2);
 
         Object[] array = calculator.stream().toArray();
-        Assert.assertEquals(array.length, 1);
-        Assert.assertEquals( (Integer)array[0], new Integer(2));
+        assertEquals(array.length, 1);
+        assertEquals( (Integer)array[0], new Integer(2));
 
     }
 
     @Test
+    @DisplayName("test pushOperand method")
     public void testPushOperand() {
         StackCalculator<Integer> calculator = new StackCalculator<>();
         calculator.pushOperand(1);
 
         Object[] array = calculator.stream().toArray();
-        Assert.assertEquals(array.length, 1);
-        Assert.assertEquals( (Integer)array[0], new Integer(1));
+        assertEquals(array.length, 1);
+        assertEquals( (Integer)array[0], new Integer(1));
     }
 
 

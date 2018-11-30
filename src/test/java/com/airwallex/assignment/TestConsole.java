@@ -1,24 +1,29 @@
 package com.airwallex.assignment;
 
 import com.airwallex.assignment.util.BigMath;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+
 
 
 import java.math.BigDecimal;
 import java.util.Random;
+
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * @author lx
  * @date 2018-11-28
  */
 
+@DisplayName("Console test case")
 public class TestConsole {
 
 
     Random rand =new Random(25);
 
     @Test
+    @DisplayName("test formatBigDecimal")
     public void testFormatBigDecimal() {
 
         final int scale = 10;
@@ -31,10 +36,9 @@ public class TestConsole {
         String[] strs = result.split("\\.");
 
         if (strs.length > 1) {
-            Assert.assertTrue("test formatBigDecimal("+val.toPlainString()+", " + scale + "), it should be: " + result,
-                    strs[1].length() <= scale);
+            assertTrue(strs[1].length() <= scale, "("+val.toPlainString()+", " + scale + "), should be: " + result);
         }else{
-            Assert.assertTrue("test formatBigDecimal("+ val.toPlainString()+", " + scale + "), it should be: " + result,true);
+            assertTrue(true, "("+ val.toPlainString()+", " + scale + "), should be: " + result);
         }
 
 
