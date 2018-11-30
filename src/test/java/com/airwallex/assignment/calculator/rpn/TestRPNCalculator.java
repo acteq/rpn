@@ -44,10 +44,7 @@ public class TestRPNCalculator {
     public void setupClass() {
         AnCareTaker anCareTaker = new AnCareTaker();
 
-        RPNCalculatorBuilder builder = new RPNCalculatorBuilder();
-        calculator = builder.buildCalculator(STORED_PRECISION);
-        builder.buildArithmetic();
-
+        calculator = new RPNCalculatorBuilder(STORED_PRECISION).buildArithmetic().build();
         calculator.setCaretaker(anCareTaker);
         // register command clear, undo
         calculator.registerCommand("clear", () -> {

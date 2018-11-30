@@ -36,9 +36,8 @@ public class Console implements Caretaker {
 
         Console console = new Console();
 
-        RPNCalculatorBuilder builder = new RPNCalculatorBuilder();
-        RPNCalculator calculator = builder.buildCalculator(STORED_PRECISION);
-        builder.buildArithmetic();
+        RPNCalculator calculator = new RPNCalculatorBuilder(STORED_PRECISION)
+                .buildArithmetic().build();
 
         calculator.setCaretaker(console);
 

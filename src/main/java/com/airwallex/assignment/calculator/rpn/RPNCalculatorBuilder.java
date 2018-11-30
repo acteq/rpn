@@ -1,6 +1,5 @@
 package com.airwallex.assignment.calculator.rpn;
 
-import com.airwallex.assignment.calculator.CalculatorBuilder;
 import com.airwallex.assignment.util.BigMath;
 
 import java.math.BigDecimal;
@@ -14,23 +13,29 @@ import java.math.RoundingMode;
  * @version 0.0.1
  */
 
-public class RPNCalculatorBuilder implements CalculatorBuilder<BigDecimal> {
+public class RPNCalculatorBuilder  {
 
     private RPNCalculator<BigDecimal> calculator;
     private int precision;
 
     /**
+     * 构建器
+     * <br>date: 2018-11-28
+     * @author: lx
+     * @param setPrecision the precision of calculator
+     */
+    public RPNCalculatorBuilder(int setPrecision) {
+        precision = setPrecision;
+        calculator = new RPNCalculator<>(text -> new BigDecimal(text));
+    }
+
+    /**
      * 构建计算器
      * <br>date: 2018-11-28
      * @author: lx
-     * @param setPrecision int
      * @return:  RPNCalculator
      */
-    @Override
-    public RPNCalculator buildCalculator(int setPrecision) {
-        calculator = new RPNCalculator<>(text -> new BigDecimal(text));
-        precision = setPrecision;
-
+    public RPNCalculator build() {
         return calculator;
     }
 
@@ -39,9 +44,9 @@ public class RPNCalculatorBuilder implements CalculatorBuilder<BigDecimal> {
      * <br>不属于算术操作符的命令，如clear, undo 等，由另外的类通过 RPNCalculator 的registerCommand完成。
      * <br>date: 2018-11-28
      * @author: lx
+     * @return self
      */
-    @Override
-    public void buildArithmetic() {
+    public RPNCalculatorBuilder buildArithmetic() {
 
         // those functions are called in the method eval of  Calculator class
         calculator.registerOperator("+", (num1, num2) -> num1.add(num2));
@@ -51,6 +56,8 @@ public class RPNCalculatorBuilder implements CalculatorBuilder<BigDecimal> {
         //we have catched runtime exceptions in the method eval of  Calculator class
         calculator.registerOperator("/", (num1, num2) -> num1.divide(num2, Integer.max(precision, Integer.max(num1.scale(), num2.scale())), RoundingMode.HALF_UP));
         calculator.registerOperator("sqrt", (num) -> BigMath.sqrt(num, Integer.max(num.scale(), precision)));
+
+        return this;
     }
 
 }
