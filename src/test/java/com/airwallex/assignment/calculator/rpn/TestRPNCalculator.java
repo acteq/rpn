@@ -3,6 +3,7 @@ package com.airwallex.assignment.calculator.rpn;
 import com.airwallex.assignment.calculator.Caretaker;
 import com.airwallex.assignment.calculator.EvalException;
 import com.airwallex.assignment.calculator.Momento;
+import com.airwallex.assignment.calculator.TestStackCalculator;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -24,7 +25,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 
 @DisplayName("RPNCalculator test case")
-public class TestRPNCalculator {
+public class TestRPNCalculator extends TestStackCalculator {
 
     private RPNCalculator calculator;
     private final int STORED_PRECISION = 15;
