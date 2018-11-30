@@ -1,5 +1,5 @@
 ## compile and build 
-using gradle 4.5
+using gradle 5
 
 ## how to build
 gradle build
