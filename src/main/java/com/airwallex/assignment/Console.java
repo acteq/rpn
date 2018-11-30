@@ -11,8 +11,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.*;
 
-
-
 /**
  * 控制台应用程序
  * date 2018-11-25
@@ -22,19 +20,15 @@ import java.util.*;
 
 public class Console implements Caretaker {
 
-    Stack<Momento> momentos = new Stack();
+    private Stack<Momento> momentos = new Stack();
 
-    private static final int STORED_PRECISION = 15;
-
-    private static final int DISPLAY_PRECISION = 10;
-
-    public static void main(String args[]) throws IOException {
+    public static void main(String args[])  {
 
         Console console = new Console();
 
         RPNCalculator calculator = new RPNCalculatorBuilder()
-                .buildArithmetic(STORED_PRECISION)
-                .setDisplayPrecision(DISPLAY_PRECISION)
+                .buildArithmetic(15)
+                .setDisplayPrecision(10)
                 .build();
 
         calculator.setCaretaker(console);
@@ -44,8 +38,7 @@ public class Console implements Caretaker {
         calculator.registerCommand("undo", () -> {
             //EmptyStackException
             try {
-                Momento momento = console.momentos.pop();
-                calculator.setMemento(momento);
+                calculator.setMemento(console.momentos.pop());
             }catch (EmptyStackException e){
                 //nothing to do
             }
@@ -70,9 +63,7 @@ public class Console implements Caretaker {
             }catch (Exception e){
                 System.out.println(e.getMessage());
             }finally {
-
                 System.out.printf("%s\n", calculator.toString());
-
                 Optional.ofNullable(unhanledList)
                         .ifPresent( list -> {
                             System.out.println("(the " + String.join(",", list)
