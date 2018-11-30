@@ -33,6 +33,9 @@ public class BigMath {
      * @return BigDecimal
      */
     public static BigDecimal sqrt(final BigDecimal num, final int scale) {
+        if(num.compareTo(BigDecimal.ZERO) == -1)
+            throw new ArithmeticException("don't support negative number");
+
         BigDecimal x0 = BigDecimal.ZERO;
         BigDecimal x1 = estimateSqrt(num);
 

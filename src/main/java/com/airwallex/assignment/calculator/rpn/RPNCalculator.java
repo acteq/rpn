@@ -3,7 +3,6 @@ package com.airwallex.assignment.calculator.rpn;
 import com.airwallex.assignment.calculator.EvalException;
 import com.airwallex.assignment.calculator.StackCalculator;
 
-import java.math.BigDecimal;
 import java.util.*;
 import java.util.function.*;
 import java.util.regex.Matcher;

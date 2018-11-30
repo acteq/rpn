@@ -9,6 +9,7 @@ import java.util.Random;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 /**
  * @author lx
@@ -16,8 +17,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  */
 @DisplayName("BigMath test case")
 public class TestBigMath {
-
-
 
     Random rand =new Random(25);
 
@@ -71,5 +70,17 @@ public class TestBigMath {
 
     }
 
+
+    @Test
+    @DisplayName("test sqrt using a negative number")
+    public void testSqrtWithNegativeNum() {
+
+        try {
+            BigDecimal val = BigMath.sqrt(new BigDecimal(-4), 15);
+            fail("'-4 sqrt' should catch exception, not " + val.toPlainString());
+        }catch (ArithmeticException e) {
+            assertTrue(e.getMessage().contains("negative"));
+        }
+    }
 
 }
