@@ -1,11 +1,11 @@
-package com.airwallex.assignment.calculator.rpn;
+package com.airwallex.assignment.calculator;
 
 /**
  * @author lx
  * @date 2018-11-30
  */
 
-import com.airwallex.assignment.calculator.EvalException;
+
 import com.airwallex.assignment.util.BigMath;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -20,10 +20,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 
-@DisplayName("RPNCalculator test case")
-public class TestRPNCalculatorBuilder {
+@DisplayName("ConcreteCalculator test case")
+public class TestCalculatorBuilder {
 
-    private RPNCalculator calculator = new RPNCalculatorBuilder().buildArithmetic(15).build();
+    private ConcreteCalculator calculator = new CalculatorBuilder(Parser::parse).buildArithmetic(15).build();
     private Random rand =new Random(25);
 
     @BeforeEach
@@ -35,14 +35,14 @@ public class TestRPNCalculatorBuilder {
     @Test
     @DisplayName("test build method")
     public void testBuild() {
-        RPNCalculator calculator = new RPNCalculatorBuilder().build();
+        ConcreteCalculator calculator = new CalculatorBuilder(Parser::parse).build();
         Assertions.assertNotNull(calculator);
     }
 
     @Test
     @SuppressWarnings("unchecked")
     @DisplayName("test if the generated calculator can push an 5")
-    public void testEvalPushOperand()throws EvalException{
+    public void testEvalPushOperand()throws EvalException {
         Stream result = calculator.eval("5");
         Object[] array = result.toArray();
         assertEquals(array.length, 1);
@@ -120,7 +120,7 @@ public class TestRPNCalculatorBuilder {
 
         BigDecimal val = BigMath.sqrt(new BigDecimal(origin*origin), 15);
 
-        String result = RPNCalculatorBuilder.formatBigDecimal(val, scale);
+        String result = CalculatorBuilder.formatBigDecimal(val, scale);
         String[] strs = result.split("\\.");
 
         if (strs.length > 1) {

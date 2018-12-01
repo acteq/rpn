@@ -1,5 +1,7 @@
 package com.airwallex.assignment.calculator;
 
+import com.airwallex.assignment.calculator.impl.Momento;
+
 /**
  * 备忘录保管者接口
  * date 2018-11-27

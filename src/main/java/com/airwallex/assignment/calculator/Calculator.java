@@ -35,4 +35,5 @@ public interface Calculator<T extends Number> {
      * @return Stream
      */
     Stream<T> stream();
+
 }

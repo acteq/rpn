@@ -1,25 +1,24 @@
-package com.airwallex.assignment.calculator.rpn;
+package com.airwallex.assignment.calculator;
 
-import com.airwallex.assignment.calculator.EvalException;
-import com.airwallex.assignment.calculator.StackCalculator;
+import com.airwallex.assignment.calculator.impl.CalculatorImpl;
+import com.airwallex.assignment.calculator.impl.Momento;
 
 import java.util.*;
 import java.util.function.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.toList;
 
 
 /**
- * 逆波兰计算器，继承自StackCalculator，负责命令和算术运算符注册，表达式解析
- * date 2018-11-22
+ * 具体计算器，负责命令和算术运算符注册，表达式解析
+ * date 2018-12-01
  * @author lx acte@foxmail.com
  * @version 0.0.1
  */
 
-public class RPNCalculator<T extends Number> extends StackCalculator<T>  {
+public class ConcreteCalculator<T extends Number> implements Calculator<T> {
 
     private Map<String, Runnable > commandMap = new HashMap<>();
     private Map<String, UnaryOperator<T> > unaryOperatorMap = new HashMap<>();
@@ -28,9 +27,56 @@ public class RPNCalculator<T extends Number> extends StackCalculator<T>  {
     private Function<String, T> toNumber;
     private Function<T, String> toText = null;
 
-    public RPNCalculator(Function<String, T> toNumber) {
-        super();
-        this.toNumber = toNumber;
+    private CalculatorImpl<T> impl;
+    private Function<String, List<Tuple<String, Integer>>> parser;
+
+    private ConcreteCalculator(){};
+
+    public static <T> ConcreteCalculator of(CalculatorImpl<T> impl,
+                                            Function<String, T> toNumber,
+                                            Function<String, List<Tuple<String, Integer>>> expression) {
+
+        ConcreteCalculator calculator = new ConcreteCalculator();
+
+        calculator.impl = Optional.ofNullable(impl).get();
+        calculator.toNumber = Optional.ofNullable(toNumber).get();
+        calculator.parser = Optional.ofNullable(expression).get();
+        return calculator;
+    }
+
+    @Override
+    public void clear() {
+        impl.clear();
+    }
+
+    public void setCaretaker(Caretaker caretaker) {
+        impl.setCaretaker(caretaker);
+    }
+
+
+    private  EvalException createEvalException(Exception e, List<Tuple<String,Integer>> list, int i, String template ) {
+
+        Tuple<String, Integer> tuple = list.get(i);
+
+        String msg = String.format(template, tuple.first, tuple.second);
+        EvalException ex = new EvalException(msg, e);
+
+        try {
+            List<Tuple<String, Integer>> unhandled = list.subList(i + 1, list.size());
+            if (unhandled.size() > 0) {
+                List<String> temp = unhandled.stream()
+                        .map(val -> val.first)
+                        .collect(Collectors.toList());
+
+                ex.setExtraMessage("(the " + String.join(",", temp)
+                        + " were not pushed on to the stack due to the previous error)");
+            }
+        }catch(IndexOutOfBoundsException exception){
+            //
+        }
+
+
+        return ex;
     }
 
     /**
@@ -44,26 +90,15 @@ public class RPNCalculator<T extends Number> extends StackCalculator<T>  {
     @Override
     public Stream<T> eval(String text) throws EvalException {
 
-        Pattern pattern = Pattern.compile("\\S+");
-        Matcher m = pattern.matcher(text);
+        List<Tuple<String,Integer>> list =  Optional.ofNullable(parser.apply(text)).orElse(new ArrayList<>());
 
-        // lambda表达式作用：当要解析text发现错误时，提取剩余未解析部分
-        BiFunction<String, Exception, EvalException> createEvalException = (msg, e) -> {
-            EvalException ex = new EvalException(msg, e);
+        final String messageTemplate = "%s (position: %s)";
 
-            List<String> list = extractMatchNode(m);
+        for(int i=0; i< list.size(); i++ ) {
+            Tuple<String, Integer> tuple = list.get(i);
 
-            if(list.size() > 0) {
-                ex.setUnhanledList(list);
-            }
+            String node = tuple.first;
 
-            return ex;
-        };
-
-
-        while(m.find()) {
-
-            String node = m.group();
             try {
                 // 依次检验是否 命令，单元运算符，二元运算符，操作数，做相应动作
                 Boolean isOperator = Optional.ofNullable(commandMap.get(node))
@@ -74,13 +109,13 @@ public class RPNCalculator<T extends Number> extends StackCalculator<T>  {
                         .orElse(false)
                         || Optional.ofNullable(unaryOperatorMap.get(node))
                         .map(operator -> {
-                            this.pushOperator(operator);
+                            impl.compute(operator);
                             return true;
                         })
                         .orElse(false)
                         || Optional.ofNullable(binaryOperatorHashMap.get(node))
                         .map(operator -> {
-                            this.pushOperator(operator);
+                            impl.compute(operator);
                             return true;
                         })
                         .orElse(false);
@@ -89,25 +124,20 @@ public class RPNCalculator<T extends Number> extends StackCalculator<T>  {
                     continue;
                 }
             }catch (ArithmeticException e) {
-                String msg = "operator " + node + " (position: " + m.start() + "): " + e.getMessage();
-                throw createEvalException.apply(msg, e);
+                throw createEvalException(e, list, i, "operator "+ messageTemplate + e.getMessage());
             }catch (EmptyStackException e) {
-                String msg = "operator " + node + " (position: " + m.start() + "): " + " insufficient parameters\n";
-                throw createEvalException.apply(msg, e);
+                throw createEvalException(e, list, i, "operator "+ messageTemplate + " insufficient params");
             }catch (Exception e) {
-                String msg = "operator " + node + " (position: " + m.start() + "): " + e.getMessage();
-                throw createEvalException.apply(msg, e);
+                throw createEvalException(e, list, i, "operator "+ messageTemplate + e.getMessage());
             }
 
             try{
                 T num = toNumber.apply(node);
-                this.pushOperand(num);
+                impl.compute(num);
             }catch (NumberFormatException e) {
-                String msg = node + " (position: " + m.start() + "): unknown operator or unsupported operand format" ;
-                throw createEvalException.apply(msg, e);
+                throw createEvalException(e, list, i, messageTemplate + "unsupported operand or operator");
             }catch (ArithmeticException e){
-                String msg = "operand " + node + " (position: " + m.start() + "): " + e.getMessage();
-                throw createEvalException.apply(msg, e);
+                throw createEvalException(e, list, i, "operand "+ messageTemplate + e.getMessage());
             }
         }
 
@@ -152,22 +182,9 @@ public class RPNCalculator<T extends Number> extends StackCalculator<T>  {
     }
 
 
-    /**
-     * 提取模式匹配的节点
-     * <br>date 2018-11-30
-     * @author lx
-     * @param  m Matcher
-     * @return nodes
-     */
-    public List<String> extractMatchNode(Matcher m) {
-
-        List<String> list = new ArrayList<>();
-
-        while (m.find()) {
-            list.add(m.group());
-        }
-
-        return list;
+    @Override
+    public Stream<T> stream() {
+        return impl.stream();
     }
 
     /**
@@ -182,7 +199,7 @@ public class RPNCalculator<T extends Number> extends StackCalculator<T>  {
 
     /**
      * 按设定的显示精度输出Stack
-     * <br>date 2018-11-28
+     * <br>date 2018-11-30
      * @author lx
      * @return Stack content
      */
@@ -194,4 +211,18 @@ public class RPNCalculator<T extends Number> extends StackCalculator<T>  {
                 .map( val -> func == null ? val.toString() : func.apply(val));
         return "stack: " + String.join(" ", results.collect(toList()));
     }
+
+
+    /**
+     * 备忘录恢复
+     * <br>date: 2018-12-01
+     * @author lx
+     * @version 0.0.2
+     * @param momento Momento
+     */
+    public void setMemento(Momento momento) {
+        impl.setMemento(momento);
+    }
+
+
 }

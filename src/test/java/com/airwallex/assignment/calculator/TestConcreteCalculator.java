@@ -1,9 +1,7 @@
-package com.airwallex.assignment.calculator.rpn;
+package com.airwallex.assignment.calculator;
 
-import com.airwallex.assignment.calculator.Caretaker;
-import com.airwallex.assignment.calculator.EvalException;
-import com.airwallex.assignment.calculator.Momento;
-import com.airwallex.assignment.calculator.TestStackCalculator;
+import com.airwallex.assignment.calculator.impl.Momento;
+import com.airwallex.assignment.calculator.impl.TestStackCalculatorImpl;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -24,10 +22,10 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  */
 
 
-@DisplayName("RPNCalculator test case")
-public class TestRPNCalculator extends TestStackCalculator {
+@DisplayName("ConcreteCalculator test case")
+public class TestConcreteCalculator extends TestStackCalculatorImpl {
 
-    private RPNCalculator calculator;
+    private ConcreteCalculator calculator;
     private final int STORED_PRECISION = 15;
     private final int DISPLAY_PRECISION = 10;
 
@@ -42,10 +40,10 @@ public class TestRPNCalculator extends TestStackCalculator {
         }
     }
 
-    public TestRPNCalculator(){
+    public TestConcreteCalculator(){
         AnCareTaker anCareTaker = new AnCareTaker();
 
-        calculator = new RPNCalculatorBuilder()
+        calculator = new CalculatorBuilder(Parser::parse)
                 .buildArithmetic(STORED_PRECISION)
                 .setDisplayPrecision(DISPLAY_PRECISION)
                 .build();

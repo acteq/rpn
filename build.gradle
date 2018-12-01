@@ -11,7 +11,7 @@ targetCompatibility = '1.8'
 group = 'com.airwallex'
 version = '0.0.1-SNAPSHOT'
 
-mainClassName = "com.airwallex.assignment.Console"
+mainClassName = "com.airwallex.assignment.calculator.rpn.Console"
 
 repositories {
     mavenCentral()

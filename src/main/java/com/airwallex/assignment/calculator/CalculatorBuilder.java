@@ -1,10 +1,13 @@
-package com.airwallex.assignment.calculator.rpn;
+package com.airwallex.assignment.calculator;
 
+import com.airwallex.assignment.calculator.impl.StackCalculatorImpl;
 import com.airwallex.assignment.util.BigMath;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.List;
 import java.util.Optional;
+import java.util.function.Function;
 
 /**
  * 逆波兰计算器创建器，构建的计算器支持算术运算，精度定义
@@ -14,38 +17,39 @@ import java.util.Optional;
  * @version 0.0.1
  */
 
-public class RPNCalculatorBuilder  {
+public class CalculatorBuilder {
 
-    private RPNCalculator<BigDecimal> calculator;
+    private ConcreteCalculator<BigDecimal> calculator;
 
     /**
      * 构建器
      * <br>date: 2018-11-28
      * @author: lx
      */
-    public RPNCalculatorBuilder() {
-        calculator = new RPNCalculator<>(text -> new BigDecimal(text));
+    public CalculatorBuilder(Function<String, List<Tuple<String, Integer>>> parser) {
+
+        calculator = ConcreteCalculator.of(new StackCalculatorImpl(), text -> new BigDecimal(text), parser);
     }
 
     /**
      * 构建计算器
      * <br>date: 2018-11-28
      * @author: lx
-     * @return:  RPNCalculator
+     * @return:  ConcreteCalculator
      */
-    public RPNCalculator build() {
+    public ConcreteCalculator build() {
         return calculator;
     }
 
     /**
      * 构建计算器的算术运算符，目前支持加减乘除和开方
-     * <br>不属于算术操作符的命令，如clear, undo 等，由另外的类通过 RPNCalculator 的registerCommand完成。
+     * <br>不属于算术操作符的命令，如clear, undo 等，由另外的类通过 ConcreteCalculator 的registerCommand完成。
      * <br>date: 2018-11-28
      * @author: lx
      * @param precision the precision of calculator
      * @return self
      */
-    public RPNCalculatorBuilder buildArithmetic(int precision) {
+    public CalculatorBuilder buildArithmetic(int precision) {
 
         // those functions are called in the method eval of  Calculator class
         calculator.registerOperator("+", (num1, num2) -> num1.add(num2));
@@ -59,7 +63,7 @@ public class RPNCalculatorBuilder  {
         return this;
     }
 
-    public RPNCalculatorBuilder setDisplayPrecision(int precision) {
+    public CalculatorBuilder setDisplayPrecision(int precision) {
         calculator.setDispalyFormat(num -> formatBigDecimal(num, precision));
         return this;
     }

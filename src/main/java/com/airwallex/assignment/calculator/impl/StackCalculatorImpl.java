@@ -1,5 +1,7 @@
-package com.airwallex.assignment.calculator;
+package com.airwallex.assignment.calculator.impl;
 
+
+import com.airwallex.assignment.calculator.Caretaker;
 
 import java.util.*;
 import java.util.function.*;
@@ -11,17 +13,13 @@ import java.util.stream.Stream;
  * <br>具体的表达式解析和附加命令由子类实现，支持波兰表达式，逆波兰表达式
  * <br>date 2018-11-24
  * @author lx
- * @version 0.0.1
+ * @version 0.0.2
  */
 
-public class StackCalculator<T extends Number> implements Calculator<T> {
+public class StackCalculatorImpl<T extends Number> implements CalculatorImpl<T> {
 
     private final Stack<T> linked = new Stack<>();
-    private Caretaker caretaker = null;
-
-    public void setCaretaker(Caretaker caretaker) {
-        this.caretaker = caretaker;
-    }
+    private Caretaker caretaker;
 
     @Override
     public void clear() {
@@ -33,21 +31,28 @@ public class StackCalculator<T extends Number> implements Calculator<T> {
         return linked.stream();
     }
 
+    @Override
+    public void setCaretaker(Caretaker caretaker) {
+        this.caretaker = caretaker;
+    }
 
     /**
      * 单元运算符入栈，计算，创建和保存备忘录
      * <br>date: 2018-11-28
      * @author: lx
+     * @version 0.0.2
      * @param  operator the UnaryOperator
      */
-    protected void pushOperator(UnaryOperator<T> operator) {
-        Optional.ofNullable(operator)
-                .ifPresent(op-> {
+    public T compute(UnaryOperator<T> operator) {
+        return Optional.ofNullable(operator)
+                .map(op-> {
                     T restore1 = null;
                     //EmptyStackException
                     try {
                         T num1 = restore1 = linked.pop();
-                        linked.push(op.apply(num1));
+                        T result = op.apply(num1);
+                        linked.push(result);
+
                         Optional.ofNullable(caretaker)
                                 .ifPresent(taker -> {
                                     T[] state = (T[]) new Number[1];
@@ -57,6 +62,7 @@ public class StackCalculator<T extends Number> implements Calculator<T> {
                                     momento.setState(state);
                                     caretaker.add(momento);
                                 });
+                        return result;
                     }catch (EmptyStackException e){
                         Optional.ofNullable(restore1).ifPresent(num->linked.push(num));
                         throw e;
@@ -64,7 +70,7 @@ public class StackCalculator<T extends Number> implements Calculator<T> {
                         Optional.ofNullable(restore1).ifPresent(num->linked.push(num));
                         throw e;
                     }
-                });
+                }).orElse(null);
 
     }
 
@@ -72,11 +78,12 @@ public class StackCalculator<T extends Number> implements Calculator<T> {
      * 二元运算符入栈，计算，创建和保存备忘录
      * <br>date: 2018-11-28
      * @author: lx
+     * @version 0.0.2
      * @param  operator the BinaryOperator
      */
-    protected void pushOperator(BinaryOperator<T> operator) {
-        Optional.ofNullable(operator)
-                .ifPresent(op->{
+    public T compute(BinaryOperator<T> operator) {
+        return Optional.ofNullable(operator)
+                .map(op->{
                     T restore1 = null;
                     T restore2 = null;
                     //EmptyStackException
@@ -97,7 +104,7 @@ public class StackCalculator<T extends Number> implements Calculator<T> {
                                     momento.setState(state);
                                     caretaker.add(momento);
                                 });
-
+                        return result;
                     }catch (EmptyStackException e){
                         Optional.ofNullable(restore2).ifPresent(num->linked.push(num));
                         Optional.ofNullable(restore1).ifPresent(num->linked.push(num));
@@ -107,7 +114,7 @@ public class StackCalculator<T extends Number> implements Calculator<T> {
                         Optional.ofNullable(restore1).ifPresent(num->linked.push(num));
                         throw e;
                     }
-                });
+                }).orElse(null);
 
     }
 
@@ -115,11 +122,12 @@ public class StackCalculator<T extends Number> implements Calculator<T> {
      * 运算符，创建和保存备忘录
      * <br>2018-11-28
      * @author lx
+     * @version 0.0.2
      * @param number type T
      */
-    protected void pushOperand(T number) {
-        Optional.ofNullable(number)
-                .ifPresent(num -> {
+    public T compute(T number) {
+        return Optional.ofNullable(number)
+                .map(num -> {
                     linked.push(num);
                     Optional.ofNullable(caretaker)
                             .ifPresent(taker -> {
@@ -128,13 +136,15 @@ public class StackCalculator<T extends Number> implements Calculator<T> {
                                 momento.setState(new Number[0]);
                                 caretaker.add(momento);
                             });
-                });
+                    return num;
+                }).orElse(null);
     }
 
     /**
      * 备忘录恢复
      * <br>date: 2018-11-28
      * @author lx
+     * @version 0.0.1
      * @param momento Momento
      */
     public void setMemento(Momento momento) {
@@ -155,15 +165,5 @@ public class StackCalculator<T extends Number> implements Calculator<T> {
 
     }
 
-    /**
-     * 具体的表达式解析由子类实现，支持波兰表达式，逆波兰表达式
-     * <br>2018-11-28
-     * @author lx
-     * @param text  String
-     * @return always return null
-     */
-    public Stream<T> eval(String text) throws EvalException {
-        return null;
-    }
 
 }

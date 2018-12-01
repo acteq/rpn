@@ -1,10 +1,7 @@
-package com.airwallex.assignment;
+package com.airwallex.assignment.calculator.rpn;
 
-import com.airwallex.assignment.calculator.Caretaker;
-import com.airwallex.assignment.calculator.EvalException;
-import com.airwallex.assignment.calculator.Momento;
-import com.airwallex.assignment.calculator.rpn.RPNCalculator;
-import com.airwallex.assignment.calculator.rpn.RPNCalculatorBuilder;
+import com.airwallex.assignment.calculator.*;
+import com.airwallex.assignment.calculator.impl.Momento;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -20,13 +17,13 @@ import java.util.*;
 
 public class Console implements Caretaker {
 
-    private Stack<Momento> momentos = new Stack();
+    private Stack<Momento> momentos = new Stack<>();
 
     public static void main(String args[])  {
 
         Console console = new Console();
 
-        RPNCalculator calculator = new RPNCalculatorBuilder()
+        ConcreteCalculator calculator = new CalculatorBuilder(Parser::parse)
                 .buildArithmetic(15)
                 .setDisplayPrecision(10)
                 .build();
@@ -52,23 +49,19 @@ public class Console implements Caretaker {
             e.printStackTrace();
         }
 
-        List<String> unhanledList = null;
+        String unhanled = null;
         while(str != null && ! str.isEmpty()){
             try {
                 calculator.eval(str);
             }catch (EvalException e){
                 System.out.println(e.getMessage());
-                unhanledList = e.getUnhanledList();
-
+                unhanled = e.getExtraMessage();
             }catch (Exception e){
                 System.out.println(e.getMessage());
             }finally {
                 System.out.printf("%s\n", calculator.toString());
-                Optional.ofNullable(unhanledList)
-                        .ifPresent( list -> {
-                            System.out.println("(the " + String.join(",", list)
-                                    + " were not pushed on to the stack due to the previous error)");
-                        });
+                if(unhanled != null)
+                    System.out.println(unhanled);
             }
             try{
                 str = br.readLine();
