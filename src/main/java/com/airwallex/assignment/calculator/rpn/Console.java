@@ -23,7 +23,7 @@ public class Console implements Caretaker {
 
         Console console = new Console();
 
-        ConcreteCalculator calculator = new CalculatorBuilder(Parser::parse)
+        ConcreteCalculator calculator = new BigDecimalCalculatorBuilder(Parser::parse)
                 .buildArithmetic(15)
                 .setDisplayPrecision(10)
                 .build();

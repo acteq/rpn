@@ -7,8 +7,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
+ * parse text to a list of tuple
  * @author lx
- * @date 2018-12-01
  */
 
 public class Parser {

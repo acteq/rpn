@@ -8,7 +8,7 @@ gradle build
 ## how to run
 gradle run -q --console=plain
 or 
-java -cp build/libs/rpn-0.0.1-SNAPSHOT.jar com.airwallex.assignment.calculator.rpn.Console
+java -cp build/libs/rpn-0.0.2-SNAPSHOT.jar com.airwallex.assignment.calculator.rpn.Console
 
 
 ## genernate document

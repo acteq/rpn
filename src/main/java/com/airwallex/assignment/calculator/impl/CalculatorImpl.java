@@ -7,8 +7,11 @@ import java.util.function.UnaryOperator;
 import java.util.stream.Stream;
 
 /**
+ * Calculator Implementation interface
+ * date 2018-12-01
  * @author lx
- * @date 2018-12-01
+ * @version 0.0.2
+ * @see StackCalculatorImpl
  */
 
 public interface CalculatorImpl<T> {

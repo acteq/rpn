@@ -32,6 +32,14 @@ public class ConcreteCalculator<T extends Number> implements Calculator<T> {
 
     private ConcreteCalculator(){};
 
+    /**
+     * @author lx
+     * @param impl a CalculatorImpl, @see CalculatorImpl
+     * @param toNumber  to convert string to type T
+     * @param expression  to parse text to a list of tuple
+     * @param <T>   type of number
+     * @return Calculator
+     */
     public static <T> ConcreteCalculator of(CalculatorImpl<T> impl,
                                             Function<String, T> toNumber,
                                             Function<String, List<Tuple<String, Integer>>> expression) {
@@ -54,6 +62,15 @@ public class ConcreteCalculator<T extends Number> implements Calculator<T> {
     }
 
 
+    /**
+     * create a custom Exception
+     * @author lx
+     * @param  e Exception
+     * @param  list a list of expression tuple
+     * @param  i index of current tuple
+     * @param  template Exception
+     * @return EvalException
+     */
     private  EvalException createEvalException(Exception e, List<Tuple<String,Integer>> list, int i, String template ) {
 
         Tuple<String, Integer> tuple = list.get(i);
@@ -172,7 +189,6 @@ public class ConcreteCalculator<T extends Number> implements Calculator<T> {
 
     /**
      * 注册二元运算符和对应的函数接口
-     * <br>date 2018-11-28
      * @author lx
      * @param  key String 如"+", "-", "/", "*"
      * @param  operator BinaryOperator接口
@@ -189,9 +205,8 @@ public class ConcreteCalculator<T extends Number> implements Calculator<T> {
 
     /**
      * 设定显示精度
-     * <br>date 2018-11-28
      * @author lx
-     * @return Stack content
+     * @param  toText to convert type T to a string
      */
     public void setDispalyFormat(Function<T, String> toText){
         this.toText = toText;
@@ -199,7 +214,6 @@ public class ConcreteCalculator<T extends Number> implements Calculator<T> {
 
     /**
      * 按设定的显示精度输出Stack
-     * <br>date 2018-11-30
      * @author lx
      * @return Stack content
      */

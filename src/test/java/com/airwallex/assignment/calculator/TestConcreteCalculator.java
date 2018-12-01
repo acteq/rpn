@@ -43,7 +43,7 @@ public class TestConcreteCalculator extends TestStackCalculatorImpl {
     public TestConcreteCalculator(){
         AnCareTaker anCareTaker = new AnCareTaker();
 
-        calculator = new CalculatorBuilder(Parser::parse)
+        calculator = new BigDecimalCalculatorBuilder(Parser::parse)
                 .buildArithmetic(STORED_PRECISION)
                 .setDisplayPrecision(DISPLAY_PRECISION)
                 .build();
