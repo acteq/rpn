@@ -10,30 +10,28 @@ import java.util.Optional;
 import java.util.function.Function;
 
 /**
- * 逆波兰计算器创建器，构建的计算器支持算术运算，精度定义
+ * 计算器创建器，构建的计算器支持算术运算，精度定义
  * <br>undo, clear命令不在这里注册，可由RPNCalculator的使用者自行添加。
- * date 2018-11-25
  * @author lx
- * @version 0.0.1
+ * @version 0.0.2
  */
 
-public class CalculatorBuilder {
+public class BigDecimalCalculatorBuilder {
 
     private ConcreteCalculator<BigDecimal> calculator;
 
     /**
      * 构建器
-     * <br>date: 2018-11-28
      * @author: lx
+     * @param parser parse text to a list of tuple
      */
-    public CalculatorBuilder(Function<String, List<Tuple<String, Integer>>> parser) {
+    public BigDecimalCalculatorBuilder(Function<String, List<Tuple<String, Integer>>> parser) {
 
         calculator = ConcreteCalculator.of(new StackCalculatorImpl(), text -> new BigDecimal(text), parser);
     }
 
     /**
      * 构建计算器
-     * <br>date: 2018-11-28
      * @author: lx
      * @return:  ConcreteCalculator
      */
@@ -44,12 +42,11 @@ public class CalculatorBuilder {
     /**
      * 构建计算器的算术运算符，目前支持加减乘除和开方
      * <br>不属于算术操作符的命令，如clear, undo 等，由另外的类通过 ConcreteCalculator 的registerCommand完成。
-     * <br>date: 2018-11-28
      * @author: lx
      * @param precision the precision of calculator
      * @return self
      */
-    public CalculatorBuilder buildArithmetic(int precision) {
+    public BigDecimalCalculatorBuilder buildArithmetic(int precision) {
 
         // those functions are called in the method eval of  Calculator class
         calculator.registerOperator("+", (num1, num2) -> num1.add(num2));
@@ -63,14 +60,13 @@ public class CalculatorBuilder {
         return this;
     }
 
-    public CalculatorBuilder setDisplayPrecision(int precision) {
+    public BigDecimalCalculatorBuilder setDisplayPrecision(int precision) {
         calculator.setDispalyFormat(num -> formatBigDecimal(num, precision));
         return this;
     }
 
     /**
      * 把BigDecimal 按设定的精度转换成String
-     * <br>date 2018-11-28
      * @author lx
      * @param num 要转换的把BigDecimal
      * @param precision 精度

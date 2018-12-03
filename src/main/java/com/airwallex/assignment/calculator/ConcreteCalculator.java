@@ -25,7 +25,7 @@ public class ConcreteCalculator<T extends Number> implements Calculator<T> {
     private Map<String, BinaryOperator<T> > binaryOperatorHashMap = new HashMap<>();
 
     private Function<String, T> toNumber;
-    private Function<T, String> toText = null;
+    private Function<T, String> toText;
 
     private CalculatorImpl<T> impl;
     private Function<String, List<Tuple<String, Integer>>> parser;

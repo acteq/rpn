@@ -3,7 +3,6 @@ package com.airwallex.assignment.calculator;
 
 /**
  * 表达式解析抛出的异常类
- * <br>date 2018-11-23
  * @author lx
  */
 
@@ -17,7 +16,6 @@ public class EvalException extends Exception {
 
     /**
      * 在异常中保存额外消息
-     * <br>date: 2018-11-28
      * @author lx
      * @param  msg string
      */
@@ -27,7 +25,6 @@ public class EvalException extends Exception {
 
     /**
      * 获取额外消息
-     * <br>date 2018-11-28
      * @author lx
      * @return string
      */

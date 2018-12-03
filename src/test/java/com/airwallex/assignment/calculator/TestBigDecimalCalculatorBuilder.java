@@ -21,9 +21,9 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 
 @DisplayName("ConcreteCalculator test case")
-public class TestCalculatorBuilder {
+public class TestBigDecimalCalculatorBuilder {
 
-    private ConcreteCalculator calculator = new CalculatorBuilder(Parser::parse).buildArithmetic(15).build();
+    private ConcreteCalculator calculator = new BigDecimalCalculatorBuilder(Parser::parse).buildArithmetic(15).build();
     private Random rand =new Random(25);
 
     @BeforeEach
@@ -35,7 +35,7 @@ public class TestCalculatorBuilder {
     @Test
     @DisplayName("test build method")
     public void testBuild() {
-        ConcreteCalculator calculator = new CalculatorBuilder(Parser::parse).build();
+        ConcreteCalculator calculator = new BigDecimalCalculatorBuilder(Parser::parse).build();
         Assertions.assertNotNull(calculator);
     }
 
@@ -120,7 +120,7 @@ public class TestCalculatorBuilder {
 
         BigDecimal val = BigMath.sqrt(new BigDecimal(origin*origin), 15);
 
-        String result = CalculatorBuilder.formatBigDecimal(val, scale);
+        String result = BigDecimalCalculatorBuilder.formatBigDecimal(val, scale);
         String[] strs = result.split("\\.");
 
         if (strs.length > 1) {
